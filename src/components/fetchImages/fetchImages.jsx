@@ -12,5 +12,4 @@ export async function fetchImages(inputData, page) {
   });
   const images = await axios.get(`https://pixabay.com/api/?${searchParams}`);
   return images.data;
-
 }

@@ -12,10 +12,10 @@ const Modal = ({ onClose, image }) => {
         onClose();
       }
     };
-    window.addEventListener('keydown', e => keyDown(e));
+    window.addEventListener('keydown', keyDown);
 
     return () => {
-      window.removeEventListener('keydown', e => keyDown(e));
+      window.removeEventListener('keydown', keyDown);
     };
   }, [onClose]);
 

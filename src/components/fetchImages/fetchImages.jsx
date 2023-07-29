@@ -7,7 +7,6 @@ export async function fetchImages(inputData, page) {
 
   try {
     const response = await axios.get(url);
-    console.log("🚀 ~ file: fetchImages.jsx:10 ~ fetchImages ~ response:", response)
     return response.data;
   } catch (error) {
     console.error('Error fetching images:', error);

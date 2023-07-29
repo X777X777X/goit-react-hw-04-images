@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Button from './Button/Button';
 import ImageGallery from './ImageGallery/ImageGallery';
 import './App.css';
@@ -9,62 +9,48 @@ import Loader from './Loader/Loader';
 
 let page = 1;
 
-function App() {
+const App = () => {
   const [inputData, setInputData] = useState('');
   const [items, setItems] = useState([]);
   const [status, setStatus] = useState('idle');
   const [totalHits, setTotalHits] = useState(0);
-  
 
-  useEffect(() => {
-    if (!inputData) return;
-
-    const fetchData = async () => {
+  const handleSubmit = async inputData => {
+    page = 1;
+    if (inputData.trim() === '') {
+      Notiflix.Notify.info('You cannot search by empty field, try again.');
+      return;
+    } else {
       try {
         setStatus('pending');
         const { totalHits, hits } = await fetchImages(inputData, page);
         if (hits.length < 1) {
           setStatus('idle');
-          Notiflix.Notify.warning(
+          Notiflix.Notify.failure(
             'Sorry, there are no images matching your search query. Please try again.'
           );
         } else {
           setItems(hits);
+          setInputData(inputData);
           setTotalHits(totalHits);
           setStatus('resolved');
         }
       } catch (error) {
         setStatus('rejected');
       }
-    };
-
-    fetchData();
-  }, [inputData]);
-
-  const handleSubmit = async inputData => {
-    if (inputData.trim() === '') {
-      Notiflix.Notify.failure(
-        'You cannot search by an empty field, try again.'
-      );
-      return;
-    } else {
-      page = 1;
-      setInputData(inputData);
     }
   };
-
   const onNextPage = async () => {
     setStatus('pending');
 
     try {
-      page += 1;
-      const { hits } = await fetchImages(inputData, page + 1);
+      const { hits } = await fetchImages(inputData, (page += 1));
       setItems(prevState => [...prevState, ...hits]);
       setStatus('resolved');
     } catch (error) {
       setStatus('rejected');
     }
-}
+  };
 
   if (status === 'idle') {
     return (
@@ -87,7 +73,7 @@ function App() {
     return (
       <div className="App">
         <Searchbar onSubmit={handleSubmit} />
-        <p>Something went wrong, please try again later.</p>
+        <p>Something wrong, try later</p>
       </div>
     );
   }
@@ -102,6 +88,6 @@ function App() {
       </div>
     );
   }
-}
+};
 
 export default App;

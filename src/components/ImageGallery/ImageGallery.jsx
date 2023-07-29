@@ -16,6 +16,7 @@ function ImageGallery({ items }) {
 
 export default ImageGallery;
 
+
 ImageGallery.propTypes = {
   items: PropTypes.array,
 };
